@@ -1,0 +1,6 @@
+<xml><ToUserName><![CDATA[o2ZQc1RZVY0YPNDn3kRFpmvdJhH4]]></ToUserName>
+				<FromUserName><![CDATA[gh_f08371b0e61f]]></FromUserName>
+		 		<CreateTime>1516384652</CreateTime>
+				<MsgType><![CDATA[image]]></MsgType>
+				<Image><MediaId><![CDATA[v7Z6lv9Of3uNNi0u-qS8l8GVsHi0ArmL25AHgBoEHVWW2uSydn7QYf1DT1AMxvZg]]></MediaId></Image>
+				</xml>

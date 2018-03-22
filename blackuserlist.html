@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<script type="text/javascript" src='ajax.js'></script>
+	<style type="text/css">
+	td
+	{
+		text-align:center;
+	}
+	a
+	{
+		margin-left: 10px;
+	}
+	input
+	{
+		height: 50px;
+	}
+	</style>
+<body>
+	
+
+	<table border="1" id="table" style="margin:0 auto;width: 400px;cellspacing:0px; cellpadding:0px;" >
+		<caption id='caption'>黑名单</caption>
+		<tr id='box'>
+			<th>ID</th>
+			<th>昵称</th>
+			<th>头像</th>
+			<th>性别</th>
+			<th>城市</th>
+			<th>操作</th>
+		</tr>
+		<tr id='page'>
+			<td colspan="6" ><a id='first' >首页</a><a id='prev'>上页</a><a id='next'>下页</a><a id='last'>尾页</a></td>
+			
+			
+		</tr>
+	</table>
+
+	
+
+	
+</body>
+	<script type="text/javascript">
+		var oTable=document.getElementById('table');
+		var oHead=document.getElementById('head');
+		var oPage=document.getElementById('page');
+		var oFirst=document.getElementById('first');
+		var oPrev=document.getElementById('prev');
+		var oNext=document.getElementById('next');
+		var oLast=document.getElementById('last');
+		var oCaption=document.getElementById('caption');
+		var oTrs=[];
+		var pageNow=1;
+		ajax({
+			method:'get',
+			url:'blackuserlist.php',
+			data:{pageNow:1},
+			success:success,
+			async:true
+		});
+
+		function success(data)
+		{
+			 console.log(data);
+			var obj=JSON.parse(data);
+			var pageCount=obj.pageCount;
+			var total=obj.total;
+			oCaption.innerHTML='黑名单 共'+total+'条';
+			for(var i=0;i<oTrs.length;i++)
+		 	{
+		 		oTable.removeChild(oTrs[i]);
+
+		 	}
+		 	oTrs=[];
+			for(var i in obj.data)
+			{
+				console.log();
+				oTr=document.createElement('tr');
+
+				oTrs.push(oTr);
+				
+				oTd1=document.createElement('td');
+				oTd2=document.createElement('td');
+
+				oTd3=document.createElement('td');
+				oImg=document.createElement('img');
+				oImg.src=obj.data[i]['headimgurl'];
+				oTd3.appendChild(oImg);
+
+				oTd4=document.createElement('td');
+				oTd5=document.createElement('td');
+				oTd6=document.createElement('td');
+				
+				oTd1.innerHTML=obj.data[i]['openid'];
+				oTd2.innerHTML=obj.data[i]['nickname'];
+				
+				oTd4.innerHTML=(obj.data[i]['sex']==1)?'男':'女';
+			
+				oTd5.innerHTML=obj.data[i]['city'];
+				oTd6.innerHTML='恢复';
+				oTd6.index=obj.data[i]['openid'];
+
+				
+
+				oTr.appendChild(oTd1);
+				oTr.appendChild(oTd2);
+				oTr.appendChild(oTd3);
+				oTr.appendChild(oTd4);
+				oTr.appendChild(oTd5);
+				oTr.appendChild(oTd6);
+
+
+				oTable.appendChild(oTr);
+
+				oTd6.onclick=function()
+				{
+					var openid=this.index;
+					ajax({
+							method:'get',
+							url:'huifu.php',
+							data:{pageNow:1,openid:openid},
+							success:success,
+							async:true
+						});
+
+				};
+
+
+			}
+
+
+
+			 oFirst.onclick=function()
+			{
+				console.log(1);
+			 	pageNow=1;
+			 	for(var i=0;i<oTrs.length;i++)
+			 	{
+			 		oTable.removeChild(oTrs[i]);
+
+			 	}
+			 	oTrs=[];
+			 	ajax({
+
+			 		method:'get',
+			 		url:'blackuserlist.php',
+			 		data:{pageNow:pageNow},
+			 		async:true,
+			 		success:success
+
+			 		});
+
+			};
+
+			oPrev.onclick=function()
+			 {
+			 	console.log(2);
+			 	pageNow=Math.max(1,pageNow-1);
+			 	
+			 	for(var i=0;i<oTrs.length;i++)
+			 	{
+			 		oTable.removeChild(oTrs[i]);
+
+			 	}
+			 	oTrs=[];
+			 	ajax({
+
+			 		method:'get',
+			 		url:'blackuserlist.php',
+			 		data:{pageNow:pageNow},
+			 		async:true,
+			 		success:success
+
+			 		});
+
+
+			 };
+
+			  oNext.onclick=function()
+			 {
+			 	pageNow=Math.min(pageCount,pageNow+1);
+			 	
+			 	for(var i=0;i<oTrs.length;i++)
+			 	{
+			 		oTable.removeChild(oTrs[i]);
+
+			 	}
+			 	oTrs=[];
+			 	ajax({
+
+			 		method:'get',
+			 		url:'blackuserlist.php',
+			 		data:{pageNow:pageNow},
+			 		async:true,
+			 		success:success
+
+			 		});
+
+			 };
+
+			   oLast.onclick=function()
+			 {
+			 	pageNow=pageCount;
+			 	
+			 	for(var i=0;i<oTrs.length;i++)
+			 	{
+			 		oTable.removeChild(oTrs[i]);
+
+			 	}
+			 	oTrs=[];
+			 	ajax({
+
+			 		method:'get',
+			 		url:'blackuserlist.php',
+			 		data:{pageNow:pageNow},
+			 		async:true,
+			 		success:success
+
+			 		});
+
+
+			 };
+				
+			
+		}
+
+		
+
+
+	
+	</script>
+</html>

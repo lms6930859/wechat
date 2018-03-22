@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src="ajax.js"></script>
+	<style type="text/css" media="screen">
+		td{
+			text-align:center;
+		}
+	</style>
+</head>
+<body>
+	
+	<table border = '1' cellspacing="0" align="center" text-align="center" id ="table";>
+	<caption>素材列表</caption>
+	<tr>
+		<th>id</th>
+		<th>作者</th>
+		<th>内容</th>
+		<th>图片</th>
+		<th>操作</th>
+	</tr>
+
+
+
+	</table>
+</body>	
+</html>
+
+
+ <script type="text/javascript" >
+	var oTable = document.getElementById('table');
+	var oTrs=[];
+	var page-1;
+	ajax({
+			method:'get',
+			url:'sheng_gettext.php',
+			async:true,
+			data:{pageNow:1},
+			success:success
+		});
+	function success(data)
+	{
+
+		console.log(data);
+		var obj = JSON.parse(data);
+		// console.log(obj);
+		for(var j=0;j<oTrs.length;j++)
+		{
+			oTrs[j].innerHTML='';
+		}
+		for(var i in obj.result)
+		{
+			
+
+			//id
+			console.log(obj.result[i]['media_id']);
+			//作者
+			console.log(obj.result[i]['content']['news_item'][0]['author']);
+			//内容
+			console.log(obj.result[i]['content']['news_item'][0]['content']);
+			//路径
+			console.log(obj.result[i]['content']['news_item'][0]['thumb_url']);
+
+
+			var media_id = obj.result[i]['media_id'];
+			var oTr = document.createElement('tr');
+			oTr.id = obj.result[i]['media_id'];
+			var oTd = document.createElement('td');
+			oTd.innerHTML = obj.result[i]['media_id'];
+			var oTd1 = document.createElement('td');
+			oTd1.innerHTML = obj.result[i]['content']['news_item'][0]['author'];
+			var oTd2 = document.createElement('td');
+			oTd2.innerHTML = obj.result[i]['content']['news_item'][0]['content'];
+			var oTd3 = document.createElement('td');
+			var oImage=document.createElement('img');
+			oImage.src=obj.result[i]['content']['news_item'][0]['thumb_url'];
+			oImage.style.width='50px';
+		
+			oTd3.appendChild(oImage);
+
+			var oTd4 = document.createElement('td');
+			var oInp = document.createElement('input');
+			oInp.value = '删除';
+			oInp.type = 'submit';
+			oInp.index=obj.result[i]['media_id'];
+			oInp.onclick=function()
+			{
+				del(this);
+			};
+			oTd4.appendChild(oInp);
+
+
+			oTable.appendChild(oTr);
+			oTr.appendChild(oTd);
+			oTr.appendChild(oTd1);
+			oTr.appendChild(oTd2);
+			oTr.appendChild(oTd3);
+			oTr.appendChild(oTd4);
+			oTrs.push(oTr);
+			
+
+
+		}	
+	}
+	
+	function del(obj) 
+	{
+		// console.log(id);
+		var del = obj.index;
+		oTable.removeChild(obj.parentNode.parentNode);
+		
+		
+		 console.log(del);
+
+		ajax({
+			method:'get',
+			url:'sheng_deltext.php',
+			async:true,
+			data:{del:del},
+			success:success
+
+		});
+	}
+	// function success(data)
+	// {
+	// 	console.log(data);
+	// }
+</script>
